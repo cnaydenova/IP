@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Feb 26 00:09:05 EET 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0144-6b18-195e-000000ac4830 
+on database directory C:\Users\Free\workspacewe\homework\wombat with class loader sun.misc.Launcher$AppClassLoader@108786b 
+Loaded from file:/C:/Users/Free/workspacewe/homework/src/homework/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_07-b11
+user.dir=C:\Users\Free\workspacewe\homework
+os.name=Windows 7
+os.arch=x86
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
