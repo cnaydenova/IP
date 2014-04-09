@@ -7,8 +7,11 @@ if($username){
 	
 	<ul>
 		<li><a href="members.php">Members</a></li>
-		<li><a href="purzalki.php">Purzalki</a></li>
-		<li><a href="members.php?p=logout">Exit</a></li>
+		<li><a href="purzalki.php">Purzalki</a></li>';
+		if ($_SESSION["admin"] == 1) {
+			echo '<li><a href="admin.php">Admin</a></li>';
+		}
+		echo '<li><a href="members.php?p=logout">Exit</a></li>
 	</ul>
 	
 	';

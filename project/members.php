@@ -1,10 +1,12 @@
+<meta charset="utf-8" />
 <?php
 session_start();
 
 include ("config.php");
 include ("menu.php");
 
-$p	= isset($_GET['p'])	? trim($_GET['p'])	: ""; 
+$p	= isset($_GET['p'])	? trim($_GET['p'])	: "";
+
 switch ($p)
 {
 	case "members":
@@ -31,34 +33,14 @@ switch ($p)
 function show_members() {
 
 	$result = mysql_query("SELECT * FROM  members ORDER BY member_id DESC");
-
+	if (mysql_num_rows($result)) {
 	
-	if (mysql_num_rows($result))
-	{
-	echo '
-		<table>
-			<thead>
-				<tr>
-					<th>Username</th>
-					<th>Email</th>
-				</tr>
-			</thead>
-			<tbody>
-	';
-		while($obj = mysql_fetch_array($result, MYSQL_ASSOC)) 
-		{
-			echo "<tr><td>" .$obj['username'] . "</td><td>" .$obj['email'] . "</td></tr>";			
-		}
-		
-	echo '
-		</tbody>
-		</table>
-	';
-
+		echo '<table><thead><tr><th>Username</th><th>Email</th></tr></thead><tbody>';
+			while($obj = mysql_fetch_array($result, MYSQL_ASSOC))
+			{ echo "<tr><td>" .$obj['username'] . "</td><td>" .$obj['email'] . "</td></tr>"; }
+		echo '</tbody></table>';
 		unset($obj);
-	}
-	else
-	{
+	} else {
 		echo "Nqma potrebiteli";
 		return;
 	}
@@ -85,26 +67,34 @@ function login()
 	$password = isset($_POST["password"]) && $_POST["password"] ? trim($_POST["password"]) : "";
 
 	if( $username != "" && $password != "") {
+	
 		$username = addslashes($username);
 		$password = addslashes($password);
 
 		if (isset($_POST['islogin'])  &&  $_POST['islogin'])
 		{
-			$sql = "SELECT * FROM members WHERE username='" . $username . "' AND password='" . md5($password) . "'";
-			$result = mysql_query($sql); 
+			$result = mysql_query("SELECT * FROM members WHERE username='" . $username . "' AND password='" . md5($password) . "'"); 
 
 				$count = mysql_num_rows($result); 
+				$obj = mysql_fetch_array( $result, MYSQL_ASSOC );
 			
 			if($count==1){ 
+			
+				$_SESSION["member_id"] = $obj['member_id'];
+				$_SESSION["admin"] = $obj['admin'];
 				$_SESSION["username"] = $username;
 				$_SESSION["password"] = $password;
+				
 				header("location:purzalki.php"); 
+			
 			} else { 
+			
 				echo "Greshen potrebitel ili parola!";
 				
 			}
 		}
 	}
+
 	return 1;
 }
 
@@ -150,6 +140,7 @@ function show_register()
 	
 	if (isset($_POST['isregister'])  &&  $_POST['isregister'])
 	{
+		// Register user
 		save_register($username, $password, $password_confirm, $email, $email_confirm);
 	}
 	
@@ -161,13 +152,11 @@ function show_register()
 
 function save_register($username, $password, $password_confirm, $email, $email_confirm)
 {
-
 	if ($username == "")
 	{
 		echo "populni potrebitelsko ime";
 		return 0;
 	}
-
 	if ($password == ""  ||  $password_confirm == "")
 	{
 		echo "vuvedi parola";
@@ -178,7 +167,6 @@ function save_register($username, $password, $password_confirm, $email, $email_c
 		echo "parolite ne suvpadat";
 		return 0;
 	}
-
 	if ($email == "")
 	{
 		echo "populni email";
@@ -190,19 +178,13 @@ function save_register($username, $password, $password_confirm, $email, $email_c
 		return 0;
 	}
 	
-
-	
 	$result = mysql_query("SELECT username, email FROM members WHERE username='$username' OR email='$email' LIMIT 1");
 		
-
 	if (mysql_num_rows($result))
 	{
 		$obj = mysql_fetch_object($result);
 
-
-
 		if (strcmp(strtolower($obj->username), strtolower($username)) == 0)
-
 		{
 			echo "potrebitelskoto ime e zaeto";
 			return 0;
@@ -213,12 +195,10 @@ function save_register($username, $password, $password_confirm, $email, $email_c
 			return 0;
 		}
 	}
-	
 
 	unset($obj);
 	unset($result);
 	
-
 	mysql_query("INSERT INTO members (username, password, email) VALUES ('$username', '" . md5($password) . "', '$email')");
 	header("location:members.php?p=login"); 
 	

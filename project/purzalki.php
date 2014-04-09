@@ -1,3 +1,4 @@
+<meta charset="utf-8" />
 <?php
 session_start(); 
 
@@ -7,11 +8,9 @@ include ("menu.php");
 if(!$_SESSION["username"]){
 	header("location:members.php?p=register"); 
 }
-
 $result = mysql_query("SELECT * FROM parzalki");
 
 while ($row = mysql_fetch_array($result)) {
-   echo "ID: ".$row{'id'}. " Name: <b><a href='obuvki.php?purzalka=".$row{'id'}."'>".$row{'name'}."</a></b><br>";
+   echo "ID: ".$row['id']. " »ме: <b><a href='obuvki.php?a=razpisanie&purzalka=".$row['id']."'>".$row['name']."</a></b><br>";
 }
-mysql_close($dbhandle);
 ?>
